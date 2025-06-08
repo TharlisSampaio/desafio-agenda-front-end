@@ -96,6 +96,7 @@ class _AgendaFormState extends State<AgendaForm> {
                     if (value!.isEmpty) {
                       return 'insira um telefone';
                     }
+                    return null;
                   },
                   onSaved: (value) => {_formData['telefone'] = value},
                 ),

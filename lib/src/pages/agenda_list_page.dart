@@ -1,7 +1,4 @@
-import 'package:desafio_agenda_front_end/src/models/agenda.dart';
 import 'package:desafio_agenda_front_end/src/provider/agenda_provider.dart';
-import 'package:desafio_agenda_front_end/src/services/agenda_api.dart';
-import 'package:desafio_agenda_front_end/src/services/agenda_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
