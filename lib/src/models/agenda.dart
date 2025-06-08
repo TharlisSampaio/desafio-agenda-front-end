@@ -1,15 +1,15 @@
 class Agenda {
-  final String? id;
+  final int? id;
   final String? nome;
   final String? sobrenome;
-  final String? telefone;
+  final String telefone;
 
   Agenda({
     this.id,
     this.nome,
     this.sobrenome,
     required this.telefone
-  })
+  });
 
   // Construtor para criar um Agenda a partir de um JSON vindo da API
   factory Agenda.fromJson(Map<String, dynamic> json){
