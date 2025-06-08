@@ -49,7 +49,7 @@ class AgendaApi {
   // Atualiza uma Agenda passando o id (Object Dart -> JSON)
   Future<Agenda> updateAgenda(Agenda agendaToUpdate) async{
     final response = await http.put(
-      Uri.parse('$_baseUrl/agenda'),
+      Uri.parse('$_baseUrl/agenda/${agendaToUpdate.id}'),
       headers: {'Content-type': 'application/json'},
       body: json.encode(agendaToUpdate.toJson())
     );

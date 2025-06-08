@@ -45,6 +45,23 @@ class AgendaProvider extends ChangeNotifier{
     }
   }
 
+  Future<void> updateAgenda(Agenda agenda) async{
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      _agendas.remove(agenda);
+      final newAgenda = await _agendaService.updateAgenda(agenda);
+      _agendas.add(newAgenda);
+    } catch (e){
+      _errorMessage = 'Erro em atualizar Agenda ${e.toString()}';
+    } finally{
+      _isLoading = false;
+      loadAgendas();
+    }
+  }
+
   Future<void> deleteAgenda(String id) async{
     _isLoading = true;
     _errorMessage = null;
@@ -52,9 +69,12 @@ class AgendaProvider extends ChangeNotifier{
 
     try{
       await _agendaService.deleteAgenda(id);
-      _agendas.removeWhere((agenda) => agenda.id == id);
+      _agendas.removeWhere((agenda) => agenda.id.toString() == id);
     } catch (e){
       _errorMessage = 'Erro ao deletar agenda: ${e.toString()}';
+    } finally{
+      _isLoading = false;
+      notifyListeners();
     }
   }
 }
