@@ -1,16 +1,26 @@
-# desafio_agenda_front_end
+<h1 align="center">
+  Agenda
+</h1>
 
-A new Flutter project.
+<p align="center">
+ <img src="https://img.shields.io/static/v1?label=Tipo&message=Desafio&color=8257E5&labelColor=000000" alt="Desafio" />
+</p>
 
-## Getting Started
+Aplicação front-end [(Agenda)](https://github.com/TharlisSampaio/desafio-agenda-front-end), para se comunicar com a [API Agenda](https://github.com/TharlisSampaio/desafio-agenda-back-end), para que realiza as operações de criar, atualizar e deletar. Desfio proposto pela [Evo Sistemas Inteligentes](https://evosistemasinteligentes.com.br/) com o objetivo de nivelar o conhecimento em Java e SpringBoot.
 
-This project is a starting point for a Flutter application.
+<h2 align="left">Tecnologias e Frameworks utilizas no projeto</h2>
 
-A few resources to get you started if this is your first Flutter project:
+* Dart
+* Flutter
+* Git
+* GitHub
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+###
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Instalação
+
+Pode ser clonado do [repositorio](https://github.com/TharlisSampaio/desafio-agenda-back-end)
+
+```
+git clone https://github.com/TharlisSampaio/desafio-agenda-front-end
+```

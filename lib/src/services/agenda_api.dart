@@ -6,6 +6,12 @@ import 'dart:convert';
 class AgendaApi {
   final String _baseUrl = AppConstants.BASE_API_URL;
 
+  // async: diz que a função pode conter operações que não vão ser 
+  // executadas de forma imediata.
+
+  // await: espera a conclusão de um async
+
+
   // Recuperar todas as Agendas (JSON -> List<Object Dart>)
   Future <List<Agenda>> getAllAgendas() async{
     final response = await http.get(Uri.parse('$_baseUrl/agenda'));
