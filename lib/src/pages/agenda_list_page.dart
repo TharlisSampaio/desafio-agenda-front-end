@@ -1,4 +1,5 @@
 import 'package:desafio_agenda_front_end/src/provider/agenda_provider.dart';
+import 'package:desafio_agenda_front_end/src/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,86 +21,52 @@ class _AgendaListPageState extends State<AgendaListPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text('Agenda'),
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: Colors.indigo,
         actions: [
           IconButton(
-            icon: Icon(Icons.add_sharp),
-            color: Colors.black54,
+            icon: Icon(Icons.add_ic_call_sharp),
             onPressed: () {
-              Navigator.pushNamed(context, '/agenda-form');
+              print('botão para adicionar');
+              Navigator.pushNamed(context, Routes.AGENDA_FORM);
             },
-          ),
+          )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Consumer<AgendaProvider>(
-          builder: (context, agendaProvider, child) {
-            if (agendaProvider.isLoading) {
-              return Center(child: CircularProgressIndicator());
-            }
-            if (agendaProvider.errorMessage != null) {
-              return Center(
-                child: Text(
-                  agendaProvider.errorMessage!,
-                  style: TextStyle(color: Colors.red),
+      body: Consumer<AgendaProvider>(
+        builder: (context, agendaProvider, child) {
+          return ListView.separated(
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
                 ),
-              );
-            }
-            if (agendaProvider.agenda.isEmpty) {
-              return Center(child: Text('Nenhuma tarefa encontrada.'));
-            }
-            return ListView.builder(
-              itemCount: agendaProvider.agenda.length,
-              itemBuilder: (context, index) {
-                final agenda = agendaProvider.agenda[index];
-                return Center(
-                  child: Card(
-                    color: const Color.fromARGB(255, 238, 234, 234),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListTile(
-                          title: Text('${agenda.nome} ${agenda.sobrenome}'),
-                          subtitle: Text('${agenda.telefone}'),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.edit_sharp,
-                                color: Colors.green[300],
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pushNamed('/agenda-form', arguments: agenda);
-                                print('Botão de editar');
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.delete_sharp,
-                                color: Colors.redAccent,
-                              ),
-                              onPressed: () {
-                                agendaProvider.deleteAgenda(agenda.id.toString());
-                                print('Botão de deletar');
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                leading: Icon(Icons.person, color: Colors.black54,),
+                title: Text(
+                  agendaProvider.agenda[index].nome.toString(),
+                  style: TextStyle(fontSize: 16),
                   ),
-                );
-              },
-            );
-          },
-        ),
+                subtitle: Text(
+                  agendaProvider.agenda[index].sobrenome.toString(),
+                  style: TextStyle(fontSize: 14),
+                ),
+                trailing: Text(
+                  agendaProvider.agenda[index].telefone.toString(),
+                  style: TextStyle(fontSize: 14),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.AGENDA_FORM, arguments: agendaProvider.agenda[index]);
+                },
+              );
+            },
+            padding: EdgeInsets.all(12),
+            separatorBuilder: (_, _) => Divider(),
+            itemCount: agendaProvider.agenda.length,
+          );
+        },
       ),
     );
   }
