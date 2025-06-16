@@ -3,7 +3,7 @@ import 'package:desafio_agenda_front_end/src/provider/agenda_provider.dart';
 import 'package:desafio_agenda_front_end/src/routes/routes.dart';
 import 'package:desafio_agenda_front_end/src/services/agenda_api.dart';
 import 'package:desafio_agenda_front_end/src/services/agenda_service.dart';
-import 'package:desafio_agenda_front_end/src/widgets/agenda_form.dart';
+import 'package:desafio_agenda_front_end/src/pages/agenda_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

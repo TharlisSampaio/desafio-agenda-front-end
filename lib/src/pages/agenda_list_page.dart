@@ -30,7 +30,6 @@ class _AgendaListPageState extends State<AgendaListPage> {
           IconButton(
             icon: Icon(Icons.add_ic_call_sharp),
             onPressed: () {
-              print('botão para adicionar');
               Navigator.pushNamed(context, Routes.AGENDA_FORM);
             },
           )
