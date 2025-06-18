@@ -99,7 +99,6 @@ class _AgendaFormState extends State<AgendaForm> {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, digite o telefone.';
                     }
-                    print(value);
                     final digitsOnly = value.replaceAll(RegExp(r'\D'), '');
                     if (digitsOnly.length < 10 || digitsOnly.length > 11) {
                       // Considerando 10 ou 11 dígitos (com DDD)
