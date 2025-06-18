@@ -57,7 +57,6 @@ class _AgendaFormState extends State<AgendaForm> {
               children: [
                 TextFormField(
                   initialValue: _formData['nome'],
-                  style: TextStyle(fontSize: 14),
                   decoration: InputDecoration(
                     labelText: 'Nome',
                     labelStyle: TextStyle(fontSize: 18),
@@ -66,8 +65,13 @@ class _AgendaFormState extends State<AgendaForm> {
                   onSaved: (value) {
                     _formData['nome'] = value;
                   },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Digite um nome.';
+                    }
+                  },
                 ),
-                SizedBox(height: 18,),
+                SizedBox(height: 18),
                 TextFormField(
                   initialValue: _formData['sobrenome'],
                   decoration: InputDecoration(
@@ -79,7 +83,7 @@ class _AgendaFormState extends State<AgendaForm> {
                     _formData['sobrenome'] = value;
                   },
                 ),
-                SizedBox(height: 18,),
+                SizedBox(height: 18),
                 TextFormField(
                   initialValue: _formData['telefone'],
                   decoration: InputDecoration(
@@ -87,48 +91,82 @@ class _AgendaFormState extends State<AgendaForm> {
                     labelStyle: TextStyle(fontSize: 18),
                     border: OutlineInputBorder(),
                   ),
+                  keyboardType: TextInputType.phone,
                   onSaved: (value) {
                     _formData['telefone'] = value;
                   },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, digite o telefone.';
+                    }
+                    print(value);
+                    final digitsOnly = value.replaceAll(RegExp(r'\D'), '');
+                    if (digitsOnly.length < 10 || digitsOnly.length > 11) {
+                      // Considerando 10 ou 11 dígitos (com DDD)
+                      return 'O telefone deve ter 10 ou 11 dígitos.';
+                    }
+                  },
                 ),
-                SizedBox(height: 18,),
+                SizedBox(height: 18),
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right:8.0),
+                      padding: const EdgeInsets.only(right: 8.0),
                       child: OutlinedButton(
                         onPressed: () {
-                          _form.currentState?.save();
-                          agendaProvider.addAgenda(
-                            Agenda(
-                              nome: _formData['nome'],
-                              sobrenome: _formData['sobrenome'],
-                              telefone: _formData['telefone']
-                            )
-                          );
-                          Navigator.of(context).pop();
-                        }, 
+                          if (_form.currentState!.validate()) {
+                            _form.currentState?.save();
+                            if (_formData['id'] == null) {
+                              agendaProvider.addAgenda(
+                                Agenda(
+                                  nome: _formData['nome'],
+                                  sobrenome: _formData['sobrenome'],
+                                  telefone: _formData['telefone'],
+                                ),
+                              );
+                            } else {
+                              agendaProvider.updateAgenda(
+                                Agenda(
+                                  id: _formData['id'],
+                                  nome: _formData['nome'],
+                                  sobrenome: _formData['sobrenome'],
+                                  telefone: _formData['telefone'],
+                                ),
+                              );
+                            }
+                            Navigator.of(context).pop();
+                          }
+                        },
                         child: const Text('Salvar'),
                         style: ButtonStyle(
-                          foregroundColor: WidgetStatePropertyAll(Colors.black87),
-                          overlayColor: WidgetStatePropertyAll(Colors.green.shade400),
+                          foregroundColor: WidgetStatePropertyAll(
+                            Colors.black87,
+                          ),
+                          overlayColor: WidgetStatePropertyAll(
+                            Colors.green.shade400,
+                          ),
                         ),
-                      )
+                      ),
                     ),
                     OutlinedButton(
-                      onPressed: isButtonEnabled ? () {
-                        agendaProvider.deleteAgenda(_formData['id'].toString());
-                        Navigator.of(context).pop();
-                      } : null,
-                      child: const Text('Excluir',),
+                      onPressed: isButtonEnabled
+                          ? () {
+                              agendaProvider.deleteAgenda(
+                                _formData['id'].toString(),
+                              );
+                              Navigator.pop(context);
+                            }
+                          : null,
+                      child: const Text('Excluir'),
                       style: ButtonStyle(
-                        overlayColor: WidgetStatePropertyAll(Colors.red.shade400),
+                        overlayColor: WidgetStatePropertyAll(
+                          Colors.red.shade400,
+                        ),
                         foregroundColor: WidgetStatePropertyAll(Colors.black87),
-                        
                       ),
-                    )
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),

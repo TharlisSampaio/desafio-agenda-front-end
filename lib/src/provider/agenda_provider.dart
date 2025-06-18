@@ -59,6 +59,7 @@ class AgendaProvider extends ChangeNotifier{
     } finally{
       _isLoading = false;
       loadAgendas();
+      notifyListeners();
     }
   }
 
