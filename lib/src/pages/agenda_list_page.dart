@@ -1,11 +1,11 @@
-import 'package:desafio_agenda_front_end/src/provider/agenda_provider.dart';
-import 'package:desafio_agenda_front_end/src/routes/routes.dart';
+import 'package:desafio_agenda_front_end/src/controller/agenda_controller.dart';
+import 'package:desafio_agenda_front_end/src/pages/agenda_form.dart';
+import 'package:desafio_agenda_front_end/src/services/agenda_api.dart';
+import 'package:desafio_agenda_front_end/src/services/agenda_service.dart';
+import 'package:desafio_agenda_front_end/src/widgets/list_tile_custom.dart';
 import 'package:desafio_agenda_front_end/src/widgets/list_view_button_add.dart';
-import 'package:desafio_agenda_front_end/src/widgets/list_view_phone.dart';
-import 'package:desafio_agenda_front_end/src/widgets/list_view_subtitle.dart';
-import 'package:desafio_agenda_front_end/src/widgets/list_view_title.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class AgendaListPage extends StatefulWidget {
   const AgendaListPage({super.key});
@@ -15,12 +15,17 @@ class AgendaListPage extends StatefulWidget {
 }
 
 class _AgendaListPageState extends State<AgendaListPage> {
+  final AgendaController _controller = Get.put(
+    AgendaController(AgendaService(AgendaApi())),
+  );
+
+  @override
   void initState() {
     super.initState();
     // Carrega as tarefas quando a página é inicializada
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AgendaProvider>(context, listen: false).loadAgendas();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   Provider.of<AgendaProvider>(context, listen: false).loadAgendas();
+    // });
   }
 
   @override
@@ -30,32 +35,26 @@ class _AgendaListPageState extends State<AgendaListPage> {
         centerTitle: true,
         title: Text('Agenda'),
         backgroundColor: Colors.indigo,
-        actions: [
-          ListViewButtonAdd()
-        ],
+        actions: [ListViewButtonAdd()],
       ),
-      body: Consumer<AgendaProvider>(
-        builder: (context, agendaProvider, child) {
-          return ListView.separated(
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(16)),
-                ),
-                leading: Icon(Icons.person, color: Colors.black54,),
-                title: ListViewTitle(agendaProvider.agenda[index].nome),
-                subtitle: ListViewSubtitle(agendaProvider.agenda[index].sobrenome),
-                trailing: ListViewPhone(agendaProvider.agenda[index].telefone),
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.AGENDA_FORM, arguments: agendaProvider.agenda[index]);
-                },
-              );
-            },
-            padding: EdgeInsets.all(12),
-            separatorBuilder: (_, _) => Divider(),
-            itemCount: agendaProvider.agenda.length,
-          );
-        },
+      body: _controller.obx(
+        (state) => ListView.builder(
+          itemBuilder: (BuildContext context, int index) {
+            final agenda = state?[index];
+            return ListTileCustom(
+              title: agenda?.nome,
+              subtitle: agenda?.sobrenome,
+              trailing: agenda?.telefone,
+              onTap: () {
+                Get.to(AgendaForm(agenda: agenda, controller: _controller,));
+              },
+            );
+          },
+          padding: EdgeInsets.all(12),
+          itemCount: state?.length,
+        ),
+        onLoading: Center(child: CircularProgressIndicator(),),
+        onError: (error) => Center(child: Text('Error: $error'))
       ),
     );
   }

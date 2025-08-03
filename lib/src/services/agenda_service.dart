@@ -23,6 +23,6 @@ class AgendaService {
   }
 
   Future<void> deleteAgenda(String id) async{
-    _agendaApi.deleteAgenda(id);
+    await _agendaApi.deleteAgenda(id);
   }
 }

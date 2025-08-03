@@ -1,16 +1,23 @@
+import 'package:desafio_agenda_front_end/src/controller/agenda_controller.dart';
 import 'package:desafio_agenda_front_end/src/models/agenda.dart';
-import 'package:desafio_agenda_front_end/src/provider/agenda_provider.dart';
+import 'package:desafio_agenda_front_end/src/pages/agenda_list_page.dart';
+import 'package:desafio_agenda_front_end/src/widgets/buttom_outlined_deletar.dart';
+import 'package:desafio_agenda_front_end/src/widgets/buttom_outlined_salvar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class AgendaForm extends StatefulWidget {
-  const AgendaForm({super.key});
+  final Agenda? agenda;
+  final AgendaController controller;
+  const AgendaForm({super.key, this.agenda, required this.controller});
 
   @override
   State<AgendaForm> createState() => _AgendaFormState();
 }
 
 class _AgendaFormState extends State<AgendaForm> {
+  // final AgendaController _controller = Get.put(AgendaController(AgendaService(AgendaApi())));
+
   final _form = GlobalKey<FormState>();
   final Map<String, dynamic> _formData = {};
   bool isButtonEnabled = false;
@@ -22,13 +29,36 @@ class _AgendaFormState extends State<AgendaForm> {
     _formData['telefone'] = agenda.telefone;
   }
 
+  void _onSave() {
+    if (_form.currentState!.validate()) {
+      _form.currentState?.save();
+      if (_formData['id'] == null) {
+        widget.controller.createdAgenda(
+          Agenda(
+            nome: _formData['nome'],
+            sobrenome: _formData['sobrenome'],
+            telefone: _formData['telefone'],
+          ),
+        );
+      } else {
+        widget.controller.updateAgenda(
+          Agenda(
+            id: _formData['id'],
+            nome: _formData['nome'],
+            sobrenome: _formData['sobrenome'],
+            telefone: _formData['telefone'],
+          ),
+        );
+      }
+      Get.to(AgendaListPage());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final AgendaProvider agendaProvider = Provider.of(context);
-    final route = ModalRoute.of(context)?.settings.arguments;
-    if (route != null) {
-      final agenda = route as Agenda;
-      _loadFormData(agenda);
+    if (widget.agenda != null) {
+      print('aqui meu chapa: ${widget.agenda}');
+      _loadFormData(widget.agenda!);
     }
     if (_formData['id'] != null) {
       isButtonEnabled = true;
@@ -69,6 +99,7 @@ class _AgendaFormState extends State<AgendaForm> {
                     if (value == null || value.isEmpty) {
                       return 'Digite um nome.';
                     }
+                    return null;
                   },
                 ),
                 SizedBox(height: 18),
@@ -104,6 +135,7 @@ class _AgendaFormState extends State<AgendaForm> {
                       // Considerando 10 ou 11 dígitos (com DDD)
                       return 'O telefone deve ter 10 ou 11 dígitos.';
                     }
+                    return null;
                   },
                 ),
                 SizedBox(height: 18),
@@ -111,58 +143,23 @@ class _AgendaFormState extends State<AgendaForm> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
-                      child: OutlinedButton(
+                      child: ButtomOutlinedSalvar(
+                        title: "Salvar",
                         onPressed: () {
-                          if (_form.currentState!.validate()) {
-                            _form.currentState?.save();
-                            if (_formData['id'] == null) {
-                              agendaProvider.addAgenda(
-                                Agenda(
-                                  nome: _formData['nome'],
-                                  sobrenome: _formData['sobrenome'],
-                                  telefone: _formData['telefone'],
-                                ),
-                              );
-                            } else {
-                              agendaProvider.updateAgenda(
-                                Agenda(
-                                  id: _formData['id'],
-                                  nome: _formData['nome'],
-                                  sobrenome: _formData['sobrenome'],
-                                  telefone: _formData['telefone'],
-                                ),
-                              );
-                            }
-                            Navigator.of(context).pop();
-                          }
+                          _onSave();
                         },
-                        child: const Text('Salvar'),
-                        style: ButtonStyle(
-                          foregroundColor: WidgetStatePropertyAll(
-                            Colors.black87,
-                          ),
-                          overlayColor: WidgetStatePropertyAll(
-                            Colors.green.shade400,
-                          ),
-                        ),
                       ),
                     ),
-                    OutlinedButton(
+                    ButtomOutlinedDeletar(
+                      title: 'Excluir',
                       onPressed: isButtonEnabled
                           ? () {
-                              agendaProvider.deleteAgenda(
+                              widget.controller.deleteAgenda(
                                 _formData['id'].toString(),
                               );
                               Navigator.pop(context);
                             }
                           : null,
-                      child: const Text('Excluir'),
-                      style: ButtonStyle(
-                        overlayColor: WidgetStatePropertyAll(
-                          Colors.red.shade400,
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(Colors.black87),
-                      ),
                     ),
                   ],
                 ),

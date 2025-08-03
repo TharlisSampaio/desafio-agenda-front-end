@@ -3,8 +3,8 @@ import 'package:desafio_agenda_front_end/src/provider/agenda_provider.dart';
 import 'package:desafio_agenda_front_end/src/routes/routes.dart';
 import 'package:desafio_agenda_front_end/src/services/agenda_api.dart';
 import 'package:desafio_agenda_front_end/src/services/agenda_service.dart';
-import 'package:desafio_agenda_front_end/src/pages/agenda_form.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<AgendaService>(create: (_) => AgendaService(AgendaApi())),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         title: 'Agenda',
         theme: ThemeData(
           primaryColor: Colors.indigo,
@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
         initialRoute: Routes.HOME,
         routes: {
           Routes.HOME: (context) => const AgendaListPage(),
-          Routes.AGENDA_FORM: (context) => const AgendaForm(),
         },
       ),
     );
