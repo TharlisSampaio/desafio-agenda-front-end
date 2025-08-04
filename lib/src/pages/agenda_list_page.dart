@@ -35,7 +35,11 @@ class _AgendaListPageState extends State<AgendaListPage> {
         centerTitle: true,
         title: Text('Agenda'),
         backgroundColor: Colors.indigo,
-        actions: [ListViewButtonAdd()],
+        actions: [
+          ListViewButtonAdd(
+            onPressed: () => Get.to(AgendaForm(controller: _controller)),
+          ),
+        ],
       ),
       body: _controller.obx(
         (state) => ListView.builder(
@@ -46,15 +50,15 @@ class _AgendaListPageState extends State<AgendaListPage> {
               subtitle: agenda?.sobrenome,
               trailing: agenda?.telefone,
               onTap: () {
-                Get.to(AgendaForm(agenda: agenda, controller: _controller,));
+                Get.to(AgendaForm(agenda: agenda, controller: _controller));
               },
             );
           },
           padding: EdgeInsets.all(12),
           itemCount: state?.length,
         ),
-        onLoading: Center(child: CircularProgressIndicator(),),
-        onError: (error) => Center(child: Text('Error: $error'))
+        onLoading: Center(child: CircularProgressIndicator()),
+        onError: (error) => Center(child: Text('Error: $error')),
       ),
     );
   }
